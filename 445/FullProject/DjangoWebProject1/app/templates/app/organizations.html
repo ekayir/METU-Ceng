@@ -1,0 +1,40 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+  <h1>Organization List</h1>
+    <p>{{ message }}</p>
+        <div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Is Attached</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for organization in organizations %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ organization.Id }}</td>
+                        <td>{{ organization.Name }}</td>
+                        <td>{{ organization.IsAttached }}</td>
+                        {% if organization.IsAttached == "True" %}
+                            <td><a href="/detach?organizationId={{ organization.Id }}">Detach</a></td>
+                        {% endif %}
+                        {% if organization.IsAttached == "False" %}
+                            <td><a href="/attach?organizationId={{ organization.Id }}">Attach</a></td>
+                        {% endif %}
+                        <td><a href="/shareUnShareOrganization?type=1&organizationId={{ organization.Id }}">Share</a></td>
+                        <td><a href="/shareUnShareOrganization?type=2&organizationId={{ organization.Id }}">UnShare</a></td>
+                        <td><a href="/devices?organizationId={{ organization.Id }}">Devices</a></td>
+                        <td><a href="/addDevice?organizationId={{ organization.Id }}">Add Device</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        </div>
+
+{% endblock %}

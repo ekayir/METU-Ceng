@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Lobby</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1>Lets chat!</h1>
+
+    <form id="form">
+        <input type="text" name="message"/>
+    </form>
+
+    <div id="messages"></div>
+<script src="../../static/app/scripts/jquery-1.10.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+    
+    var alreadyNotifications = []
+    let url = `ws://${window.location.host}/ws/socket-server/`
+    console.log(url)
+
+    const chatSocket = new WebSocket(url)
+
+    chatSocket.onmessage = function (e) {
+        let data = JSON.parse(e.data)
+        console.log('Data:', data)
+
+        if (data.type === 'chat') {
+            let messages = document.getElementById('messages')
+            $.each(data.message, function (index, notification) {
+
+                if (alreadyNotifications.includes(JSON.stringify(notification)) == false) {
+                    setTimeout(function () {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            //showMethod: 'slideDown',
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            tapToDismiss: false
+                        };
+                        toastr.warning('<p style="margin-bottom:2px;margin-top:2px;">Device Product No :' + notification.DeviceProductNo + ' </p>' +
+                            '<p style="margin-bottom:2px;margin-top:2px;">Part Product No :' + notification.PartProductNo + ' </p>' +
+                            '<p style="margin-bottom:2px;margin-top:2px;">Expected Life Time :' + notification.ExpectedLifeTime + ' </p>',
+                            '<p style="margin-bottom:2px;margin-top:2px;">Organization Name :' + notification.OrganizationName + ' </p>');
+
+                    }, 1300);
+
+                    alreadyNotifications.push(JSON.stringify(notification))
+                }
+            });
+
+        }
+    }
+
+    let form = document.getElementById('form')
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let message = e.target.message.value
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }))
+        form.reset()
+    })
+
+
+    </script>
+</body>
+</html>

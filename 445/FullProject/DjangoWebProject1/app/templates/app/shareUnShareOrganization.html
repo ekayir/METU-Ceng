@@ -1,0 +1,65 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+  
+{% if type == "1" %}
+    <h1>Share Organization</h1>
+{% endif %}
+{% if type == "2" %}
+    <h1>UnShare Organization</h1>
+{% endif %}
+        <div>
+            <p>{{ message }}</p>
+              
+            <form action="." method="post" class="form-horizontal">
+                {% csrf_token %}
+                <input type="hidden" name="organizationId"  value="{{organizationId}}"/>
+                <input type="hidden" name="type"  value="{{type}}"/>
+                <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Choice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if not users %}
+                    <tr>
+                        <td colspan="3">No user(s) data.</td>
+                    </tr>
+                    {% endif %}
+                    {% if users %}
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ user.Id }}</td>
+                            <td>{{ user.Username }}</td>                        
+                            <td>
+                                <input type="radio" name="selectedUserId" value="{{ user.Id }}">
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    <tr>
+                        <td>
+                            {% if type == "1" %}
+                                <input type="submit" value="Share" class="btn btn-default" />
+                            {% endif %}
+                            {% if type == "2" %}
+                                <input type="submit" value="UnShare" class="btn btn-default" />
+                            {% endif %}
+                        </td>
+                    </tr>
+                        
+                    {% endif %}
+                
+                </tbody>
+            </table>
+            </form>
+            
+        
+        </div>
+
+{% endblock %}

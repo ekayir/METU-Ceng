@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - My Django Application</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Phase 4</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a onclick="getOrganizations()" href="#">Organizations</a></li>
+                    <li><a onclick="openAddNewOrganizationModal()" href="#">Add Organization</a></li>
+                    <li><a onclick="getCatalog()" href="#">Catalog</a></li>
+                    <li><a onclick="openAddNewDeviceToCatalog()"  href="#">Add Device To Catalog</a></li>
+                    <li><a onclick="openNotificationTimeLimitModal()" href="#">Notification Time Limit</a></li>
+                </ul>
+                {% include 'app/loginpartial.html' %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+{% block content %}
+        
+        
+        
+{% endblock %}
+
+        <hr/>
+        <footer>
+            <p>&copy; {{ 2022 }} - Our Phase 4 Django Application</p>
+        </footer>
+    </div>
+
+
+<div class="modal fade" id="addOrganizationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Organization</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:100px">
+         <div class="form-group">
+             <label for="id_organizationName" class="col-md-4 control-label">Organization name</label>
+             <div class="col-md-8">
+                 <input type="text" name="organizationName" class="form-control" placeholder="Organization name" maxlength="254" required="" id="id_organizationName">
+             </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a id="addOrganizationButton" href="#" onclick="addOrganization()" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDeviceModalLabel">Add Device</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:100px">
+          <div class="form-group">
+                    <label for="id_description" class="col-md-3 control-label">Description</label>
+                    <div class="col-md-9">
+                        <input type="text" name="description" class="form-control" placeholder="description" maxlength="254" required="" id="id_addDevice_description">
+                    </div>
+          </div>
+          <div class="form-group">
+                    <label for="id_catalogDeviceId" class="col-md-3 control-label">Catalog Devices</label>
+                    <div class="col-md-9">
+                        <select name="catalogDeviceId" id="id_addDevice_catalogDeviceId" class="form-control"></select>
+                </div>
+            </div>
+          <input type="hidden" id="addNewDeviceToOrganizationId"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a  href="#" onclick="addDevice()" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addPartModal" tabindex="-1" role="dialog" aria-labelledby="addPartModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPartModalLabel">Add Part To Device</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:250px">
+         <div class="form-group">
+                    <label for="id_productNo" class="col-md-3 control-label">ProductNo</label>
+                    <div class="col-md-9">
+                        <input type="text" name="productNo" class="form-control" placeholder="Product No" maxlength="254" required="" id="id_productNo">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_type" class="col-md-3 control-label">Type</label>
+                    <div class="col-md-9">
+                        <input type="text" name="type" class="form-control" placeholder="Type" maxlength="254" required="" id="id_type">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_description" class="col-md-3 control-label">Description</label>
+                    <div class="col-md-9">
+                        <input type="text" name="description" class="form-control" placeholder="description" maxlength="254" required="" id="id_description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_totalLifeTime" class="col-md-3 control-label">Total Life Time</label>
+                    <div class="col-md-9">
+                        <input type="text" name="totalLifeTime" class="form-control" placeholder="Total Life Time" maxlength="254" required="" id="id_totalLifeTime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_price" class="col-md-3 control-label">Price</label>
+                    <div class="col-md-9">
+                        <input type="text" name="price" class="form-control" placeholder="Price" maxlength="254" required="" id="id_price">
+                    </div>
+                </div>
+          <input type="hidden" id="addPartModalDeviceId"/>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a id="addPartButton" href="#" onclick="addPart()" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addDeviceToCatalogModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceToCatalogModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDeviceToCatalogModalLabel">Add Device To Catalog</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:150px">
+          <div class="form-group">
+                    <label for="id_productNo" class="col-md-3 control-label">ProductNo</label>
+                    <div class="col-md-9">
+                        <input type="text" name="productNo" class="form-control" placeholder="Product No" maxlength="254" required="" id="id_addCatalog_productNo">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_type" class="col-md-3 control-label">Type</label>
+                    <div class="col-md-9">
+                        <input type="text" name="type" class="form-control" placeholder="Type" maxlength="254" required="" id="id_addCatalog_type">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_description" class="col-md-3 control-label">Description</label>
+                    <div class="col-md-9">
+                        <input type="text" name="description" class="form-control" placeholder="description" maxlength="254" required="" id="id_addCatalog_description">
+                    </div>
+                </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="#" onclick="addDeviceToCatalog()" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="setNotificationTimeLimitModal" tabindex="-1" role="dialog" aria-labelledby="setNotificationTimeLimitModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Set Notification Time Limit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:100px">
+         <div class="form-group">
+             <label for="id_notificationTimeLimit" class="col-md-4 control-label">Notification Time Limit(secs)</label>
+             <div class="col-md-8">
+                 <input type="text"   class="form-control" placeholder="Notification Time Limit(secs)" maxlength="254" required="" id="id_notificationTimeLimit">
+             </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a   href="#" onclick="setNotificationTimeLimit()" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span id="messageText"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" id="id_getParts_deviceId"/>   
+
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'app/scripts/phase4.js' %}"></script>
+    <script src="{% static 'app/scripts/notification.js' %}"></script>
+    
+{% block scripts %}
+
+    
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+  <h1>Device List</h1>
+        <p>{{ message }}</p>
+
+        <div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <th>Id</th>
+                        <th>Product No</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Is On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ device.Id }}</td>
+                        <td>{{ device.ProductNo }}</td>
+                        <td>{{ device.Type }}</td>
+                        <td>{{ device.Description }}</td>
+                        <td>{{ device.IsOn }}</td>
+                        {% if device.IsOn == "On" %}
+                            <td><a href="/off?deviceId={{ device.Id }}&organizationId={{ organizationId }}">Off</a></td>
+                        {% endif %}
+                        {% if device.IsOn == "Off" %}
+                            <td><a href="/on?deviceId={{ device.Id }}&organizationId={{ organizationId }}">On</a></td>
+                        {% endif %}
+                        <td><a href="#" onclick="getParts('')">Part(s)</a></td>
+                        <td><a href="/addPart?deviceId={{ device.Id }}">Add Part</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        </div>
+
+
+
+<script>
+
+</script>
+
+{% endblock %}

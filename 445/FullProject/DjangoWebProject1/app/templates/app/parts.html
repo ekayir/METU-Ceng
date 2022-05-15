@@ -1,0 +1,38 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+  <h1>Part List</h1>
+        <p>{{ message }}</p>
+
+        <div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Device No</th>
+                        <th>Part No</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>T.L.Time</th>
+                        <th>R.L.Time</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for part in parts %}
+                    <tr>
+                        <td>{{ part.Device_ProductNo }}</td>
+                        <td>{{ part.Part_ProductNo }}</td>
+                        <td>{{ part.Description }}</td>
+                        <td>{{ part.Type }}</td>
+                        <td>{{ part.TotalLifeTime }}</td>
+                        <td>{{ part.ExpectedLifeTime }}</td>
+                        <td>{{ part.Price }}</td>
+                        <td><a href="/removePart?partId={{ part.Id }}&deviceId={{ part.DeviceId }}">Remove</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        </div>
+
+{% endblock %}
