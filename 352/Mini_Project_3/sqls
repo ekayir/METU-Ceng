@@ -1,0 +1,55 @@
+select c.session_count,p.max_parallel_sessions from customer c, plan p where c.email ='' and c."password" ='' and c.plan_id = p.plan_id 
+
+insert into customer (email , "password" , first_name ,last_name ,session_count ,plan_id ) values();
+
+
+select * from customer c order by 1
+
+
+select c.session_count,p.max_parallel_sessions from customer c, plan p where c.email ='cj@mp3.com' and c.password='pass123' and c.plan_id = p.plan_id 
+
+select plan_id||'|'||plan_name||'|'||resolution||'|'||max_parallel_sessions||'|'||monthly_fee as result from plan  
+
+update customer set session_count =0
+
+
+select plan_id||'|'||plan_name||'|'||resolution||'|'||max_parallel_sessions||'|'||monthly_fee as result from plan where plan_id = (select c2.plan_id from customer c2 where customer_id =1)
+
+
+select * from movies m where movie_id  in ('tt0000009') 
+
+
+
+
+
+select * from 
+(select 0 as customer_id,'1' as movie_id union
+select 1,'1' union select null,null) t
+where not exists (select 1 from watched w2 where w2.customer_id = t.customer_id and w2.movie_id = t.movie_id) and t.customer_id is not null
+
+select 0 as customer_id,'1' as movie_id union
+select 0 as customer_id,'1' as movie_id union select null,null
+
+select * from customer c 
+
+select * from (
+select m2.* from movies m2 , genres g3,(select g.genre_name , max(m.votes)maxVotes from movies m , genres g where m.movie_id =g.movie_id 
+and m.movie_id not in (select w.movie_id from watched w where w.customer_id =1)
+and g.genre_name in (select g2.genre_name from watched w2, genres g2 where w2.customer_id =1 and w2.movie_id = g2.movie_id )
+group by g.genre_name )t
+where m2.movie_id =g3.movie_id and m2.votes=t.maxVotes and g3.genre_name =t.genre_name
+union
+(select m.* from movies m where m.movie_id not in (select w.movie_id from watched w where w.customer_id =1)
+and m.movie_year >=2010
+order by m.votes desc 
+limit 10)
+union
+(select m.* from movies m where m.movie_id not in (select w.movie_id from watched w where w.customer_id =1)
+and m.votes > (select avg(m.votes ) from watched w , movies m where w.customer_id =1 and w.movie_id =m.movie_id)
+order by m.votes desc 
+))h
+order by 1
+
+
+
+ 
